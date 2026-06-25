@@ -5,7 +5,7 @@
 // and set TICKETMASTER_API_KEY in .env.local. Without it, the app falls
 // back to the static researched show list in lib/data.ts.
 
-import { findNearestAirport, Show } from "./data";
+import { findNearestAirport, shows as curatedShows, Show } from "./data";
 
 export function ticketmasterConfigured(): boolean {
   return Boolean(process.env.TICKETMASTER_API_KEY);
@@ -87,6 +87,84 @@ export async function fetchLiveShows(size: number = 100): Promise<Show[] | null>
   } catch {
     return null;
   }
+}
+
+async function fetchShowsForArtist(artist: string): Promise<Show[]> {
+  try {
+    const url = new URL("https://app.ticketmaster.com/discovery/v2/events.json");
+    url.searchParams.set("apikey", process.env.TICKETMASTER_API_KEY!);
+    url.searchParams.set("keyword", artist);
+    url.searchParams.set("sort", "date,asc");
+    url.searchParams.set("size", "3");
+
+    const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
+    if (!res.ok) return [];
+
+    const data = await res.json();
+    const events = (data._embedded?.events ?? []) as TmEvent[];
+    return events.map(tmEventToShow).filter((s): s is Show => s !== null);
+  } catch {
+    return [];
+  }
+}
+
+// Runs async tasks with a concurrency cap, respecting Ticketmaster's free-
+// tier rate limit (5 req/sec) when looking up ~100 curated artists by name.
+async function runWithConcurrency<T>(
+  items: T[],
+  concurrency: number,
+  task: (item: T) => Promise<void>
+): Promise<void> {
+  let index = 0;
+  async function worker() {
+    while (index < items.length) {
+      const item = items[index++];
+      await task(item);
+    }
+  }
+  await Promise.all(Array.from({ length: concurrency }, worker));
+}
+
+// Looks up real, current shows for every artist in our curated roster by
+// name, so known headliners surface even if the broad "dance" genre search
+// misses them. Runs in batches of 4/sec to stay under the free rate limit.
+export async function fetchCuratedArtistShows(): Promise<Show[]> {
+  if (!ticketmasterConfigured()) return [];
+
+  const artists = Array.from(new Set(curatedShows.map((s) => s.artist)));
+  const results: Show[] = [];
+
+  const batchSize = 4;
+  for (let i = 0; i < artists.length; i += batchSize) {
+    const batch = artists.slice(i, i + batchSize);
+    await runWithConcurrency(batch, batchSize, async (artist) => {
+      const found = await fetchShowsForArtist(artist);
+      results.push(...found);
+    });
+    if (i + batchSize < artists.length) {
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+    }
+  }
+
+  return results;
+}
+
+// Combines the broad genre search with the curated-artist name search,
+// deduping by event id. Returns null if both come up empty so callers fall
+// back to the static show list.
+export async function fetchAllLiveShows(): Promise<Show[] | null> {
+  if (!ticketmasterConfigured()) return null;
+
+  const [broad, curated] = await Promise.all([
+    fetchLiveShows(),
+    fetchCuratedArtistShows(),
+  ]);
+
+  const byId = new Map<string, Show>();
+  for (const show of broad ?? []) byId.set(show.id, show);
+  for (const show of curated) byId.set(show.id, show);
+
+  return byId.size > 0 ? Array.from(byId.values()) : null;
 }
 
 // Fetches a single event by its Ticketmaster ID (the part after "tm-" in
