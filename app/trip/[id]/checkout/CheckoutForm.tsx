@@ -1,21 +1,38 @@
 "use client";
 
 import { useState } from "react";
+import { buildFlightBookingLink, buildHotelBookingLink } from "@/lib/booking-links";
 
 const fieldClass =
   "mt-1 w-full border border-neutral-700 bg-[#0a1410] px-3 py-2 text-[#f6f3ea] focus:border-[#1fae72] focus:outline-none";
 const labelClass = "block text-xs font-bold uppercase tracking-widest text-neutral-400";
 
+function addDays(iso: string, days: number): string {
+  const d = new Date(iso + "T00:00:00");
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 export default function CheckoutForm({
   showId,
   tier,
   origin,
+  destination,
+  city,
   total,
+  hotel,
+  nights,
+  checkIn,
 }: {
   showId: string;
   tier: string;
   origin: string;
+  destination: string;
+  city: string;
   total: number;
+  hotel?: string;
+  nights?: string;
+  checkIn?: string;
 }) {
   const [confirmed, setConfirmed] = useState(false);
   const [confirmationCode, setConfirmationCode] = useState("");
@@ -34,6 +51,9 @@ export default function CheckoutForm({
   }
 
   if (confirmed) {
+    const checkOutDate =
+      checkIn && nights ? addDays(checkIn, parseInt(nights, 10)) : undefined;
+
     return (
       <div className="mt-8 border border-emerald-500/40 bg-[#0a1410] p-6 text-center">
         <div className="text-xs font-bold uppercase tracking-widest text-emerald-400">
@@ -45,10 +65,35 @@ export default function CheckoutForm({
         <div className="mt-2 text-xs uppercase tracking-wide text-neutral-500">
           Confirmation code: {confirmationCode}
         </div>
+
+        <div className="mx-auto mt-6 max-w-sm space-y-3 text-left">
+          <div className="text-xs font-bold uppercase tracking-widest text-[#1fae72]">
+            Finish booking
+          </div>
+          <a
+            href={buildFlightBookingLink(origin, destination, checkIn ?? new Date().toISOString().slice(0, 10))}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            className="block border border-neutral-700 p-3 text-xs font-bold uppercase tracking-widest text-[#f6f3ea] transition hover:border-[#1fae72]"
+          >
+            Book your flight on Skyscanner →
+          </a>
+          {hotel && checkIn && checkOutDate && (
+            <a
+              href={buildHotelBookingLink(hotel, city, checkIn, checkOutDate)}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="block border border-neutral-700 p-3 text-xs font-bold uppercase tracking-widest text-[#f6f3ea] transition hover:border-[#1fae72]"
+            >
+              Book {hotel} on Booking.com →
+            </a>
+          )}
+        </div>
+
         <p className="mx-auto mt-4 max-w-sm text-xs text-neutral-500">
-          This is a prototype checkout — no payment was charged and no real
-          flight or hotel was booked. In the full product, this screen hands
-          off to live airline and hotel booking APIs.
+          This reservation isn&apos;t charged yet — finish your flight and
+          hotel through the links above to lock in your trip. We may earn a
+          referral fee on bookings made through these links.
         </p>
       </div>
     );

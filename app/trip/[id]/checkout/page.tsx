@@ -83,7 +83,12 @@ export default async function CheckoutPage({
           showId={show.id}
           tier={tier}
           origin={origin}
+          destination={show.airportCode}
+          city={show.city}
           total={parseInt(total, 10)}
+          hotel={hotel}
+          nights={nights}
+          checkIn={checkIn}
         />
       </div>
     </main>
