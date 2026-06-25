@@ -73,6 +73,7 @@ export async function fetchLiveShows(size: number = 100): Promise<Show[] | null>
     url.searchParams.set("classificationName", "dance");
     url.searchParams.set("sort", "date,asc");
     url.searchParams.set("size", String(size));
+    url.searchParams.set("startDateTime", new Date().toISOString().slice(0, 19) + "Z");
 
     const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
     if (!res.ok) return null;
@@ -96,6 +97,7 @@ async function fetchShowsForArtist(artist: string): Promise<Show[]> {
     url.searchParams.set("keyword", artist);
     url.searchParams.set("sort", "date,asc");
     url.searchParams.set("size", "3");
+    url.searchParams.set("startDateTime", new Date().toISOString().slice(0, 19) + "Z");
 
     const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
     if (!res.ok) return [];

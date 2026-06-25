@@ -1,11 +1,11 @@
 import Link from "next/link";
-import { DATA_AS_OF, shows as staticShows } from "@/lib/data";
+import { DATA_AS_OF, filterUpcoming, shows as staticShows } from "@/lib/data";
 import { fetchAllLiveShows } from "@/lib/ticketmaster";
 import ShowsBrowser from "@/app/ShowsBrowser";
 
 export default async function BookPage() {
   const liveShows = await fetchAllLiveShows();
-  const shows = liveShows ?? staticShows;
+  const shows = filterUpcoming(liveShows ?? staticShows);
   const isLive = liveShows !== null;
 
   return (

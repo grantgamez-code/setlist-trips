@@ -25,6 +25,13 @@ export const DATA_AS_OF = "June 25, 2026";
 // Picks the closest airport in our curated list to a venue's coordinates.
 // Used to map live Ticketmaster venues (which give lat/lon, not airport
 // codes) onto the existing distance/pricing model.
+// Drops any show whose date has already passed (compares by calendar date,
+// not time, so "today" still counts as upcoming).
+export function filterUpcoming(shows: Show[]): Show[] {
+  const todayIso = new Date().toISOString().slice(0, 10);
+  return shows.filter((s) => s.date >= todayIso);
+}
+
 export function findNearestAirport(lat: number, lon: number): Airport {
   const toRad = (d: number) => (d * Math.PI) / 180;
   const distance = (a: Airport) => {
