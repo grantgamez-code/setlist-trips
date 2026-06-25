@@ -18,7 +18,28 @@ export type Show = {
 
 // Tour data researched from official artist sites, Songkick, Ticketmaster,
 // and Resident Advisor. Schedules shift constantly — see DATA_AS_OF below.
+// This static list is the fallback when live Ticketmaster data isn't
+// configured (see lib/ticketmaster.ts).
 export const DATA_AS_OF = "June 25, 2026";
+
+// Picks the closest airport in our curated list to a venue's coordinates.
+// Used to map live Ticketmaster venues (which give lat/lon, not airport
+// codes) onto the existing distance/pricing model.
+export function findNearestAirport(lat: number, lon: number): Airport {
+  const toRad = (d: number) => (d * Math.PI) / 180;
+  const distance = (a: Airport) => {
+    const R = 3958.8;
+    const dLat = toRad(lat - a.lat);
+    const dLon = toRad(lon - a.lon);
+    const h =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(a.lat)) * Math.cos(toRad(lat)) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+  };
+  return airports.reduce((closest, a) =>
+    distance(a) < distance(closest) ? a : closest
+  );
+}
 
 export const airports: Airport[] = [
   { code: "JFK", city: "New York", lat: 40.6413, lon: -73.7781 },

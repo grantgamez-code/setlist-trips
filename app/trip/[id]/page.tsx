@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { shows } from "@/lib/data";
+import { fetchLiveShowById } from "@/lib/ticketmaster";
 import { buildTicketLink, getTicketTiers } from "@/lib/ticketing";
 import LocalGuide from "./LocalGuide";
 import TripBuilder from "./TripBuilder";
@@ -11,7 +12,9 @@ export default async function TripPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const show = shows.find((s) => s.id === id);
+  const show = id.startsWith("tm-")
+    ? await fetchLiveShowById(id.slice(3))
+    : shows.find((s) => s.id === id);
   if (!show) notFound();
 
   return (

@@ -1,8 +1,13 @@
 import Link from "next/link";
-import { DATA_AS_OF, shows } from "@/lib/data";
+import { DATA_AS_OF, shows as staticShows } from "@/lib/data";
+import { fetchLiveShows } from "@/lib/ticketmaster";
 import ShowsBrowser from "@/app/ShowsBrowser";
 
-export default function BookPage() {
+export default async function BookPage() {
+  const liveShows = await fetchLiveShows();
+  const shows = liveShows ?? staticShows;
+  const isLive = liveShows !== null;
+
   return (
     <main className="min-h-screen bg-[#0a1410] text-[#f6f3ea]">
       <div className="relative w-full px-6 py-16 text-center">
@@ -22,8 +27,9 @@ export default function BookPage() {
           Trips built around the show, not the other way around
         </p>
         <p className="mt-2 text-xs uppercase tracking-wide text-neutral-600">
-          Tour dates accurate as of {DATA_AS_OF} — schedules change, always
-          confirm before booking
+          {isLive
+            ? "Live tour dates from Ticketmaster — refreshed hourly"
+            : `Tour dates accurate as of ${DATA_AS_OF} — schedules change, always confirm before booking`}
         </p>
 
         <div className="mt-4 flex justify-center">
