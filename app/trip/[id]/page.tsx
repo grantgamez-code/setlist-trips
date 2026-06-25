@@ -47,7 +47,7 @@ export default async function TripPage({
             {getTicketTiers().map(({ tier, label, description }) => (
               <a
                 key={tier}
-                href={buildTicketLink(show.artist, tier)}
+                href={show.ticketUrl ?? buildTicketLink(show.artist, tier)}
                 target="_blank"
                 rel="noopener noreferrer sponsored"
                 className="border border-neutral-700 p-3 transition hover:border-[#1fae72]"
@@ -60,8 +60,9 @@ export default async function TripPage({
             ))}
           </div>
           <p className="mt-2 text-[10px] text-neutral-600">
-            Opens Ticketmaster search results for this show. We may earn a
-            referral fee on bookings made through these links.
+            {show.ticketUrl
+              ? "Opens this show's actual Ticketmaster listing — ticket type/tier is selected on that page. We may earn a referral fee on bookings made through these links."
+              : "This show isn't sourced from Ticketmaster, so these open a search instead of a confirmed listing — double check it's actually for sale before booking. We may earn a referral fee on bookings made through these links."}
           </p>
         </div>
 

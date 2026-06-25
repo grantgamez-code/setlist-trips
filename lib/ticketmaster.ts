@@ -59,6 +59,7 @@ function tmEventToShow(event: TmEvent): Show | null {
     country,
     airportCode: nearestAirport.code,
     date,
+    ticketUrl: event.url,
   };
 }
 

@@ -14,6 +14,7 @@ export type Show = {
   country: string;
   airportCode: string; // nearest airport to the venue
   date: string; // ISO date
+  ticketUrl?: string; // direct Ticketmaster event page, only set for live shows
 };
 
 // Tour data researched from official artist sites, Songkick, Ticketmaster,
