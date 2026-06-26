@@ -56,7 +56,7 @@ export default function LandingPage() {
       <section className="relative overflow-hidden border-b border-neutral-800 px-6 py-28 sm:py-36">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=2000&q=80&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1666289186874-0d023fe7d002?w=2000&q=80&auto=format&fit=crop"
             alt=""
             className="h-full w-full object-cover"
           />

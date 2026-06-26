@@ -23,7 +23,7 @@ export default async function BookPage() {
       <div className="relative w-full overflow-hidden px-6 py-20 text-center">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1632008650337-3b8befff9d75?w=2000&q=80&auto=format&fit=crop"
+            src="https://images.unsplash.com/photo-1763630054130-0129c32d3f7f?w=2000&q=80&auto=format&fit=crop"
             alt=""
             className="h-full w-full object-cover"
           />
