@@ -14,6 +14,8 @@ export function ticketmasterConfigured(): boolean {
 type TmEvent = {
   id: string;
   name: string;
+  info?: string;
+  pleaseNote?: string;
   dates?: { start?: { localDate?: string } };
   classifications?: {
     segment?: { name?: string };
@@ -69,6 +71,7 @@ function tmEventToShow(event: TmEvent): Show | null {
     airportCode: nearestAirport.code,
     date,
     ticketUrl: event.url,
+    description: event.info || event.pleaseNote || undefined,
   };
 }
 

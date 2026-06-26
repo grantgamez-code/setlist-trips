@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { shows } from "@/lib/data";
+import { describeShow, shows } from "@/lib/data";
 import { fetchLiveShowById } from "@/lib/ticketmaster";
 import { buildTicketLink, getTicketTiers } from "@/lib/ticketing";
 import LocalGuide from "./LocalGuide";
@@ -37,6 +37,9 @@ export default async function TripPage({
             day: "numeric",
             year: "numeric",
           })}
+        </p>
+        <p className="mt-4 max-w-2xl font-serif text-base text-neutral-300">
+          {describeShow(show)}
         </p>
 
         <div className="mt-6">

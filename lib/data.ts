@@ -15,7 +15,24 @@ export type Show = {
   airportCode: string; // nearest airport to the venue
   date: string; // ISO date
   ticketUrl?: string; // direct Ticketmaster event page, only set for live shows
+  description?: string; // real event info from Ticketmaster, when available
 };
+
+const GENRE_BLURBS: Record<Show["genre"], string> = {
+  House: "expect a deep, groove-driven house set built for dancing all night",
+  Techno: "expect a relentless, peak-time techno set with no room to breathe",
+  EDM: "expect a big-room, festival-energy set built for raised hands and drops",
+  Bass: "expect heavy low-end, bass-forward selections that hit hard on a real rig",
+};
+
+// Generates a sensible description when a show doesn't have a real,
+// hand-written or API-sourced one (lib/ticketmaster.ts pulls real event
+// info when Ticketmaster provides it). Keeps the trip page from ever
+// showing a blank description.
+export function describeShow(show: Show): string {
+  if (show.description) return show.description;
+  return `${show.artist} live at ${show.venue} in ${show.city} — ${GENRE_BLURBS[show.genre]}.`;
+}
 
 // Tour data researched from official artist sites, Songkick, Ticketmaster,
 // and Resident Advisor. Schedules shift constantly — see DATA_AS_OF below.
