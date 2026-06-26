@@ -15,7 +15,11 @@ type TmEvent = {
   id: string;
   name: string;
   dates?: { start?: { localDate?: string } };
-  classifications?: { genre?: { name?: string }; subGenre?: { name?: string } }[];
+  classifications?: {
+    segment?: { name?: string };
+    genre?: { name?: string };
+    subGenre?: { name?: string };
+  }[];
   url?: string;
   _embedded?: {
     venues?: {
@@ -45,6 +49,11 @@ function tmEventToShow(event: TmEvent): Show | null {
   const country = venue?.country?.name;
 
   if (!venue || isNaN(lat) || isNaN(lon) || !date || !city || !country) return null;
+
+  // "classificationName=dance" ambiguously also matches Arts & Theatre →
+  // Dance (ballet, dance academies) — only keep actual music events.
+  const segment = event.classifications?.[0]?.segment?.name;
+  if (segment !== "Music") return null;
 
   const artist = event._embedded?.attractions?.[0]?.name ?? event.name;
   const subGenre = event.classifications?.[0]?.subGenre?.name;
@@ -81,7 +90,12 @@ export async function fetchLiveShows(size: number = 100): Promise<Show[] | null>
 
     const data = await res.json();
     const events = (data._embedded?.events ?? []) as TmEvent[];
-    const shows = events
+    // classificationName=dance pulls in unrelated genres too (e.g. Pop) —
+    // the broad search specifically needs the actual Dance/Electronic tag.
+    const electronicEvents = events.filter(
+      (e) => e.classifications?.[0]?.genre?.name === "Dance/Electronic"
+    );
+    const shows = electronicEvents
       .map(tmEventToShow)
       .filter((s): s is Show => s !== null);
 
