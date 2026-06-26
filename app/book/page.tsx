@@ -20,29 +20,38 @@ export default async function BookPage() {
 
   return (
     <main className="min-h-screen bg-[#0a1410] text-[#f6f3ea]">
-      <div className="relative w-full px-6 py-16 text-center">
+      <div className="relative w-full overflow-hidden px-6 py-20 text-center">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1632008650337-3b8befff9d75?w=2000&q=80&auto=format&fit=crop"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a1410]/40 via-[#0a1410]/85 to-[#0a1410]" />
+        </div>
+
         <Link
           href="/"
-          className="absolute left-6 top-16 border border-neutral-700 px-3 py-2 text-xs font-bold uppercase tracking-widest text-[#1fae72] transition hover:border-[#1fae72] hover:bg-[#1fae72] hover:text-[#0a1410]"
+          className="relative inline-block border border-neutral-700 px-3 py-2 text-xs font-bold uppercase tracking-widest text-[#1fae72] transition hover:border-[#1fae72] hover:bg-[#1fae72] hover:text-[#0a1410] sm:absolute sm:left-6 sm:top-16"
         >
           ← Home
         </Link>
 
-        <div className="inline-block border border-[#f6f3ea] px-3 py-1">
+        <div className="relative mt-6 inline-block border border-[#f6f3ea] px-3 py-1 sm:mt-0">
           <h1 className="text-2xl font-black uppercase tracking-tighter">
             SetList
           </h1>
         </div>
-        <p className="mx-auto mt-4 max-w-md text-sm uppercase tracking-widest text-[#0f6e44]">
+        <p className="relative mx-auto mt-4 max-w-md text-sm uppercase tracking-widest text-[#1fae72]">
           Trips built around the show, not the other way around
         </p>
-        <p className="mt-2 text-xs uppercase tracking-wide text-neutral-600">
+        <p className="relative mt-2 text-xs uppercase tracking-wide text-neutral-400">
           {isLive
             ? "Live tour dates from Ticketmaster — refreshed hourly"
             : `Tour dates accurate as of ${DATA_AS_OF} — schedules change, always confirm before booking`}
         </p>
 
-        <div className="mt-4 flex justify-center">
+        <div className="relative mt-4 flex justify-center">
           <SocialLinks />
         </div>
       </div>
