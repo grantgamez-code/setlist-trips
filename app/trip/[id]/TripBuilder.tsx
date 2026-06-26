@@ -58,7 +58,7 @@ export default function TripBuilder({ show }: { show: Show }) {
     setLiveData(null);
     const controller = new AbortController();
     fetch(
-      `/api/trip-pricing?originCode=${originCode}&destinationCode=${show.airportCode}&date=${show.date}`,
+      `/api/trip-pricing?originCode=${originCode}&destinationCode=${show.airportCode}&date=${checkInDate}&checkIn=${checkInDate}&checkOut=${addDays(checkInDate, nights)}`,
       { signal: controller.signal }
     )
       .then((res) => res.json())
@@ -70,7 +70,7 @@ export default function TripBuilder({ show }: { show: Show }) {
       })
       .catch(() => {});
     return () => controller.abort();
-  }, [originCode, show.airportCode, show.date]);
+  }, [originCode, show.airportCode, checkInDate, nights]);
 
   return (
     <div className="mt-10">

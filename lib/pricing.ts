@@ -149,7 +149,7 @@ export function planTrip(
   };
 }
 
-// Overlays real Amadeus pricing onto the simulated tiers when available.
+// Overlays real Duffel pricing onto the simulated tiers when available.
 // Flight: real economy price anchors "premium"; basic/luxury scale off it.
 // Hotel: real nightly low/high anchor basic/luxury; premium is the midpoint.
 export function applyLivePricing(
