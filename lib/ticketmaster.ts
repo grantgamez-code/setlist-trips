@@ -144,13 +144,30 @@ async function runWithConcurrency<T>(
 
 // Looks up real, current shows for every artist in our curated roster by
 // name, so known headliners surface even if the broad "dance" genre search
-// misses them. Runs in batches of 4/sec to stay under the free rate limit.
-export async function fetchCuratedArtistShows(): Promise<Show[]> {
+// misses them.
+//
+// `throttle: true` paces requests at 4/sec to respect Ticketmaster's free
+// rate limit — use this from the background refresh route only. User-
+// facing requests use `throttle: false`, which relies on each artist's
+// individual fetch() already being cached from that background refresh
+// (cached responses return near-instantly with no artificial delay); any
+// artist not yet cached just gets skipped this round rather than blocking
+// the page load.
+export async function fetchCuratedArtistShows(
+  { throttle }: { throttle: boolean } = { throttle: false }
+): Promise<Show[]> {
   if (!ticketmasterConfigured()) return [];
 
   const artists = Array.from(new Set(curatedShows.map((s) => s.artist)));
-  const results: Show[] = [];
 
+  if (!throttle) {
+    // Fast path: no concurrency cap or delay needed since these reads
+    // should mostly be cache hits from the background refresh.
+    const all = await Promise.all(artists.map(fetchShowsForArtist));
+    return all.flat();
+  }
+
+  const results: Show[] = [];
   const batchSize = 4;
   for (let i = 0; i < artists.length; i += batchSize) {
     const batch = artists.slice(i, i + batchSize);
@@ -168,13 +185,14 @@ export async function fetchCuratedArtistShows(): Promise<Show[]> {
 
 // Combines the broad genre search with the curated-artist name search,
 // deduping by event id. Returns null if both come up empty so callers fall
-// back to the static show list.
+// back to the static show list. Fast path for user-facing requests — see
+// fetchCuratedArtistShows for why this doesn't throttle.
 export async function fetchAllLiveShows(): Promise<Show[] | null> {
   if (!ticketmasterConfigured()) return null;
 
   const [broad, curated] = await Promise.all([
     fetchLiveShows(),
-    fetchCuratedArtistShows(),
+    fetchCuratedArtistShows({ throttle: false }),
   ]);
 
   const byId = new Map<string, Show>();
