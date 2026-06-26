@@ -244,4 +244,7 @@ export const shows: Show[] = [
   { id: "112", artist: "Solardo", genre: "House", venue: "Chester Festival", city: "Chester, UK", country: "United Kingdom", airportCode: "MAN", date: "2026-07-24" },
   { id: "113", artist: "CamelPhat", genre: "House", venue: "Barcelona Club Show", city: "Barcelona, Spain", country: "Spain", airportCode: "BCN", date: "2026-08-07" },
   { id: "114", artist: "Eli Brown", genre: "House", venue: "Awakenings Festival", city: "Hilvarenbeek, Netherlands", country: "Netherlands", airportCode: "AMS", date: "2026-07-10" },
+  { id: "115", artist: "ANOTR", genre: "House", venue: "Playa Pacha", city: "Dubai, UAE", country: "United Arab Emirates", airportCode: "DXB", date: "2026-11-13" },
+  { id: "116", artist: "RÜFÜS DU SOL", genre: "House", venue: "Kia Forum", city: "Los Angeles, CA", country: "United States", airportCode: "LAX", date: "2026-08-06" },
+  { id: "117", artist: "Jimi Jules", genre: "House", venue: "Grimbergen Club Show", city: "Grimbergen, Belgium", country: "Belgium", airportCode: "BRU", date: "2026-09-13" },
 ];
