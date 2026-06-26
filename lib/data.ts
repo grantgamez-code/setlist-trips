@@ -219,4 +219,11 @@ export const shows: Show[] = [
   { id: "105", artist: "Adam Port", genre: "House", venue: "London Club Show", city: "London, UK", country: "United Kingdom", airportCode: "LHR", date: "2026-08-09" },
   { id: "106", artist: "Rampa", genre: "House", venue: "Athens Club Show", city: "Athens, Greece", country: "Greece", airportCode: "ATH", date: "2026-06-27" },
   { id: "107", artist: "Reznik", genre: "House", venue: "KEINEMUSIK | PACHA ICONS", city: "Dubai, UAE", country: "United Arab Emirates", airportCode: "DXB", date: "2026-11-21" },
+  { id: "108", artist: "Sammy Virji", genre: "House", venue: "Red Rocks Amphitheatre", city: "Morrison, CO", country: "United States", airportCode: "DEN", date: "2026-10-16" },
+  { id: "109", artist: "Interplanetary Criminal", genre: "Bass", venue: "Chicago Club Show", city: "Chicago, IL", country: "United States", airportCode: "ORD", date: "2026-09-04" },
+  { id: "110", artist: "Patrick Topping", genre: "House", venue: "Eastern Electrics", city: "London, UK", country: "United Kingdom", airportCode: "LHR", date: "2026-08-09" },
+  { id: "111", artist: "Hot Since 82", genre: "House", venue: "Amsterdam Club Show", city: "Amsterdam, Netherlands", country: "Netherlands", airportCode: "AMS", date: "2026-08-08" },
+  { id: "112", artist: "Solardo", genre: "House", venue: "Chester Festival", city: "Chester, UK", country: "United Kingdom", airportCode: "MAN", date: "2026-07-24" },
+  { id: "113", artist: "CamelPhat", genre: "House", venue: "Barcelona Club Show", city: "Barcelona, Spain", country: "Spain", airportCode: "BCN", date: "2026-08-07" },
+  { id: "114", artist: "Eli Brown", genre: "House", venue: "Awakenings Festival", city: "Hilvarenbeek, Netherlands", country: "Netherlands", airportCode: "AMS", date: "2026-07-10" },
 ];
