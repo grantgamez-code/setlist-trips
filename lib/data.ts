@@ -16,6 +16,7 @@ export type Show = {
   date: string; // ISO date
   ticketUrl?: string; // direct Ticketmaster event page, only set for live shows
   description?: string; // real event info from Ticketmaster, when available
+  venueAddress?: string; // street address/state/postal code, when available
 };
 
 const GENRE_BLURBS: Record<Show["genre"], string> = {

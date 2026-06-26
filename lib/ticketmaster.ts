@@ -28,6 +28,9 @@ type TmEvent = {
       name?: string;
       city?: { name?: string };
       country?: { name?: string };
+      state?: { name?: string };
+      address?: { line1?: string };
+      postalCode?: string;
       location?: { latitude?: string; longitude?: string };
     }[];
     attractions?: { name?: string }[];
@@ -61,6 +64,12 @@ function tmEventToShow(event: TmEvent): Show | null {
   const subGenre = event.classifications?.[0]?.subGenre?.name;
   const nearestAirport = findNearestAirport(lat, lon);
 
+  const addressParts = [
+    venue.address?.line1,
+    venue.state?.name,
+    venue.postalCode,
+  ].filter(Boolean);
+
   return {
     id: `tm-${event.id}`,
     artist,
@@ -72,6 +81,7 @@ function tmEventToShow(event: TmEvent): Show | null {
     date,
     ticketUrl: event.url,
     description: event.info || event.pleaseNote || undefined,
+    venueAddress: addressParts.length > 0 ? addressParts.join(", ") : undefined,
   };
 }
 

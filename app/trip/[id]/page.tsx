@@ -38,6 +38,11 @@ export default async function TripPage({
             year: "numeric",
           })}
         </p>
+        {show.venueAddress && (
+          <p className="mt-1 text-xs uppercase tracking-wide text-neutral-600">
+            {show.venueAddress}
+          </p>
+        )}
         <p className="mt-4 max-w-2xl font-serif text-base text-neutral-300">
           {describeShow(show)}
         </p>
