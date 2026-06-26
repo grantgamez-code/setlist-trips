@@ -3,6 +3,16 @@ import { DATA_AS_OF, filterUpcoming, shows as staticShows } from "@/lib/data";
 import { fetchAllLiveShows } from "@/lib/ticketmaster";
 import ShowsBrowser from "@/app/ShowsBrowser";
 
+// The curated-artist search (lib/ticketmaster.ts) takes ~30-40s to stay
+// under Ticketmaster's rate limit across ~100 artists, which exceeds
+// Vercel's default function timeout — this raises it so the fetch can
+// actually finish instead of getting killed mid-request.
+export const maxDuration = 60;
+// Forces this page to run as a per-request function instead of being
+// statically generated at build time, where the live fetch would otherwise
+// run against build-time constraints rather than the runtime config above.
+export const dynamic = "force-dynamic";
+
 export default async function BookPage() {
   const liveShows = await fetchAllLiveShows();
   const shows = filterUpcoming(liveShows ?? staticShows);
