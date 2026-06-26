@@ -247,4 +247,6 @@ export const shows: Show[] = [
   { id: "115", artist: "ANOTR", genre: "House", venue: "Playa Pacha", city: "Dubai, UAE", country: "United Arab Emirates", airportCode: "DXB", date: "2026-11-13" },
   { id: "116", artist: "RÜFÜS DU SOL", genre: "House", venue: "Kia Forum", city: "Los Angeles, CA", country: "United States", airportCode: "LAX", date: "2026-08-06" },
   { id: "117", artist: "Jimi Jules", genre: "House", venue: "Grimbergen Club Show", city: "Grimbergen, Belgium", country: "Belgium", airportCode: "BRU", date: "2026-09-13" },
+  { id: "118", artist: "ANOTR", genre: "House", venue: "Pacha New York", city: "New York, NY", country: "United States", airportCode: "JFK", date: "2026-07-10" },
+  { id: "119", artist: "ANOTR", genre: "House", venue: "Pacha New York", city: "New York, NY", country: "United States", airportCode: "JFK", date: "2026-07-11" },
 ];
