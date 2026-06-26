@@ -23,15 +23,33 @@ export type Show = {
 // configured (see lib/ticketmaster.ts).
 export const DATA_AS_OF = "June 25, 2026";
 
-// Picks the closest airport in our curated list to a venue's coordinates.
-// Used to map live Ticketmaster venues (which give lat/lon, not airport
-// codes) onto the existing distance/pricing model.
 // Drops any show whose date has already passed (compares by calendar date,
 // not time, so "today" still counts as upcoming).
 export function filterUpcoming(shows: Show[]): Show[] {
   const todayIso = new Date().toISOString().slice(0, 10);
   return shows.filter((s) => s.date >= todayIso);
 }
+
+// Blends live Ticketmaster results with our hand-researched static list,
+// rather than one replacing the other. Niche/underground artists we've
+// researched by hand often aren't listed on Ticketmaster at all — without
+// this merge, they'd silently vanish from the listing whenever live data
+// is active. Prefers the live entry (it carries a real ticketUrl) when
+// both sources have the same artist on the same date.
+export function mergeShows(live: Show[], staticList: Show[]): Show[] {
+  const byKey = new Map<string, Show>();
+  for (const show of staticList) {
+    byKey.set(`${show.artist.toLowerCase()}|${show.date}`, show);
+  }
+  for (const show of live) {
+    byKey.set(`${show.artist.toLowerCase()}|${show.date}`, show);
+  }
+  return Array.from(byKey.values());
+}
+
+// Picks the closest airport in our curated list to a venue's coordinates.
+// Used to map live Ticketmaster venues (which give lat/lon, not airport
+// codes) onto the existing distance/pricing model.
 
 export function findNearestAirport(lat: number, lon: number): Airport {
   const toRad = (d: number) => (d * Math.PI) / 180;

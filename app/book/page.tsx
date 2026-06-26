@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { DATA_AS_OF, filterUpcoming, shows as staticShows } from "@/lib/data";
+import { DATA_AS_OF, filterUpcoming, mergeShows, shows as staticShows } from "@/lib/data";
 import { fetchAllLiveShows } from "@/lib/ticketmaster";
 import ShowsBrowser from "@/app/ShowsBrowser";
 
@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 export default async function BookPage() {
   const liveShows = await fetchAllLiveShows();
-  const shows = filterUpcoming(liveShows ?? staticShows);
+  const shows = filterUpcoming(mergeShows(liveShows ?? [], staticShows));
   const isLive = liveShows !== null;
 
   return (
